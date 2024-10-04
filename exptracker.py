@@ -1,12 +1,15 @@
 import tkinter as tk
-from tkinter import StringVar
+from tkinter import StringVar; import tkinter.font
 import sqlite3
-from Matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 from datetime import datetime
 
 # Define the main window
 root = tk.Tk()
 root.title("Personal Expense Tracker")
+
+# Change the background color using configure
+root.configure(bg='lavender')
 
 # Create the labels and entries
 date_label = tk.Label(root, text="Date:")
@@ -37,15 +40,25 @@ def get_entry_values():
     category = category_entry.get()
     amount = amount_entry.get()
     notes = notes_entry.get()
-    return date, category, amount, notes
-
-# Print the entries
-print(f"Date: {date}\nCategory: {category}\nAmount: {amount}\nNotes: {notes}")
+    print(f"Date: {date}\nCategory: {category}\nAmount: {amount}\nNotes: {notes}")
 
 # Clear inputs after submission
 date_entry.delete(0, tk.END)
 amount_entry.delete(0, tk.END)
 notes_entry.delete(0, tk.END)
+
+def show_pie_chart():
+    # Retrieve data from database
+    c.execute("SELECT category, SUM(amount) FROM expenses GROUP BY category")
+    data = c.fetchall()
+
+    # Create pie chart
+    labels = [row[0] for row in data]
+    values = [row[1] for row in data]
+    plt.figure(figsize=(6, 6))
+    plt.pie(values, labels=labels, autopct='%1.1f%%')
+    plt.title('Monthly Expense Breakdown')
+    plt.show()
 
 # Dropdown menu for category
 category_var = StringVar(root)
@@ -103,6 +116,5 @@ def validate_amount_format(amount):
     except ValueError:
         raise ValueError("Amount should be a numeric value")
 
-# Add a delete button
-# Add a search function
+
 
