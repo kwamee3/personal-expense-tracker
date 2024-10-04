@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import StringVar
 import sqlite3
 from Matplotlib import pyplot as plt
+from datetime import datetime
 
 # Define the main window
 root = tk.Tk()
@@ -74,6 +75,8 @@ c.execute("INSERT INTO expenses VALUES (?, ?, ?, ?)", (date, category, amount, n
 # Commit the changes
 conn.commit()
 
+
+
 # Data Validation and Error Handling
 try:
     if date == '':
@@ -88,6 +91,17 @@ except ValueError:
     print("Error: Please fill in all required fields.")
     exit()
 # Make sure that the date is in the correct format
+def validate_date_format(date):
+    try:
+        datetime.datetime.strptime(date, '%m/%d/%Y')
+    except ValueError:
+        raise ValueError("Date format should be MM/DD/YYYY")
+# Make sure that the amount is a float value
+def validate_amount_format(amount):
+    try:
+        float(amount)
+    except ValueError:
+        raise ValueError("Amount should be a numeric value")
 
 # Add a delete button
 # Add a search function
